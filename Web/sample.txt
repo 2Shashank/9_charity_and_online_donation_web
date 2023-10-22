@@ -1,0 +1,4 @@
+Rohith Vedantam - Home page and database connectivity
+Sahil Kamate - Donar page
+Suprith M P - Donee page
+Shashank K N - Administration page
