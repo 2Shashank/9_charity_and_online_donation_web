@@ -81,7 +81,7 @@
 <body>
     <div class="container">
         <h1>Donation Form</h1>
-        <form action="your_server_script.php" method="post">
+        <form action="donationForm.php" method="post">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
 
@@ -96,6 +96,8 @@
             </select>
 
             <div id="payment-group">
+                <label for="amount">Enter amount</label>
+                <input type="text" name="amount">
                 <label>Payment Options:</label>
                 <input type="radio" name="payment" value="credit_card"> UPI
                 <input type="radio" name="payment" value="paypal"> Debit Card
