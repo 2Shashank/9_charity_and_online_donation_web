@@ -8,12 +8,35 @@ $resultDonors = mysqli_query($conn, $sqlDonors);
 $sqlDonees = "SELECT * FROM User WHERE User_type = 'Donee'";
 $resultDonees = mysqli_query($conn, $sqlDonees);
 
-$sqlDonations = "SELECT * FROM Donation";
-$resultDonations = mysqli_query($conn, $sqlDonations);
+$resultMonDonations = mysqli_query($conn, "SELECT * FROM money_donation");
+
+$resultOthDonations = mysqli_query($conn , "SELECT * FROM other_donation");
 
 $userCount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as user_count FROM User"))['user_count'];
 
-$donationCount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as donation_count FROM Donation"))['donation_count'];
+$donationCount1 = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as donation_count FROM money_donation"))['donation_count'];
+$donationCount2 = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as donation_count FROM other_donation"))['donation_count'];
+
+$donationCount = $donationCount1 + $donationCount2;
+$requestCount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as request_count FROM Request_donation"))['request_count'];
+
+$resultRequest = mysqli_query($conn, "SELECT * FROM Request_donation");
+
+
+$donationAmount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(Amount) as donation_amount FROM money_donation"))['donation_amount'];
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (isset($_POST["request_id"]) && isset($_POST["UpdateStatus"])) {
+        $requestId = $_POST["request_id"];
+        $newStatus = ($_POST["updateStatus"] === "approve") ? "Approved" : "Rejected";
+        // Update the Status column in the database
+        $updateQuery = "UPDATE Request_donation SET Status = '$newStatus' WHERE Request_id = " . strval($requestId);
+        mysqli_query($conn, $updateQuery);
+        // Redirect to the same page after processing the form
+        header("Location: admin.php");
+        exit;
+    }
+}
 
 ?>
 
@@ -43,6 +66,8 @@ $donationCount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as dona
                         class="fas fa-user me-2"></i>Donars</a>
                 <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" onclick="fetchDonees()"><i
                         class="fas fa-user me-2"></i>Donee</a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" onclick="fetchRequests()"><i
+                        class="fas fa-user me-2"></i>Requests</a>
                 <a href="logout.php" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold"><i
                         class="fas fa-power-off me-2"></i>Logout</a>
             </div>
@@ -86,7 +111,7 @@ $donationCount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as dona
                     <div class="col-md-3">
                         <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
                             <div>
-                                <h3 class="fs-2">₹0</h3>
+                                <h3 class="fs-2">₹<?php echo $donationAmount; ?></h3>
                                 <p class="fs-5">Donation recieved</p>
                             </div>
                             <i
@@ -96,7 +121,7 @@ $donationCount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as dona
                     <div class="col-md-3">
                         <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
                             <div>
-                                <h3 class="fs-2">₹0</h3>
+                                <h3 class="fs-2"><?php echo $requestCount; ?></h3>
                                 <p class="fs-5">Donation sent</p>
                             </div>
                             <i class="fas fa-hand-holding-usd fs-1 primary-text border rounded-full secondary-bg p-3"></i>
@@ -180,22 +205,82 @@ $donationCount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as dona
                         <thead>
                             <tr>
                                 <th scope="col" >#</th>
-                                <th scope="col">Name</th>
+                                <th scope="col">Donation ID</th>
                                 <th scope="col">Email</th>
-                                <th scope="col">Address</th>
-                                <th scope="col">Type of Donation</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Type of payment</th>
+                                <th scope="col">Item</th>
+                                <th scope="col">Description</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                                 $counter = 1;
-                                while ($donation = mysqli_fetch_assoc($resultDonations)) {
+                                while ($donation = mysqli_fetch_assoc($resultMonDonations)) {
                                     echo "<tr>";
                                     echo "<td>$counter</td>";
-                                    echo "<td>{$donation['Name']}</td>";
+                                    echo "<td>{$donation['Donation_id']}</td>";
                                     echo "<td>{$donation['Email']}</td>";
-                                    echo "<td>{$donation['Address']}</td>";
-                                    echo "<td>{$donation['Items']}</td>";
+                                    echo "<td>₹{$donation['Amount']}</td>";
+                                    echo "<td>{$donation['Payment_type']}</td>";
+                                    echo "<td>-</td>";
+                                    echo "<td>-</td>";
+                                    echo "</tr>";
+                                    $counter++;
+                                }
+                                while ($OthDon = mysqli_fetch_assoc($resultOthDonations)) {
+                                    echo "<tr>";
+                                    echo "<td>$counter</td>";
+                                    echo "<td>{$OthDon['Donation_id']}</td>";
+                                    echo "<td>{$OthDon['Email']}</td>";
+                                    echo "<td>-</td>";
+                                    echo "<td>-</td>";
+                                    echo "<td>{$OthDon['Item']}</td>";
+                                    echo "<td>{$OthDon['Description']}</td>";
+                                    echo "</tr>";
+                                    $counter++;
+                                }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col" id="request_info" style="display: none" >
+                    <h3 class="fs-4 mb-3">Requests</h3>
+                    <table class="table bg-white rounded shadow-sm  table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Request ID</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Item</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                while ($request = mysqli_fetch_assoc($resultRequest)) {
+                                    echo "<tr>";
+                                    echo "<td>$counter</td>";
+                                    echo "<td>{$request['Request_id']}</td>";
+                                    echo "<td>{$request['Email']}</td>";
+                                    echo "<td>{$request['Item']}</td>";
+                                    echo "<td>{$request['Description']}</td>";
+                                    echo "<td>{$request['Status']}</td>";
+                                    echo "<td>";
+                                    // echo "<button onclick=\"handleAction('".strval($request['Request_id'])."', 'approve')\">Approve</button>";
+                                    // echo "<button onclick=\"handleAction('".strval($request['Request_id'])."', 'reject')\">Reject</button>";
+                                    echo "<form action=\"admin.php\" method=\"POST\" >";
+                                    echo "<input type=\"hidden\" name=\"request_id\" value=\"$request[Request_id]\">";
+                                    echo "<select id=\"UpdateStatus\" name=\"updateStatus\">";
+                                    echo "<option value=\"select\">Select</option>";
+                                    echo "<option value=\"approve\">Approve</option>";
+                                    echo "<option value=\"reject\">Reject</option>";
+                                    echo "</select>";
+                                    echo "<input type=\"submit\" value=\"Update\">";
+                                    echo "</form>";
+                                    echo "</td>";
                                     echo "</tr>";
                                     $counter++;
                                 }
@@ -219,10 +304,12 @@ $donationCount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as dona
             var donar = document.getElementById("donar_info");
             var donee = document.getElementById("donee_info");
             var donation = document.getElementById("donation_info");
+            var requestInfo =document.getElementById("request_info");
 
-            if (donar.style.display === "none" || donee.style.display === "display") {
+            if (donar.style.display === "none" || donee.style.display === "display" || requestInfo.style.display === "block") {
                 donee.style.display = "none";
                 donation.style.display = "none";
+                requestInfo.style.display = "none";
                 donar.style.display = "block";
             } else {
                 donar.style.display = "none";
@@ -233,16 +320,71 @@ $donationCount = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as dona
             var donar = document.getElementById("donar_info");
             var donee = document.getElementById("donee_info");
             var donation =document.getElementById("donation_info");
+            var requestInfo =document.getElementById("request_info");
 
-            if (donee.style.display === "none" || donar.style.display === "block" ) {
+            if (donee.style.display === "none" || donar.style.display === "block" || requestInfo.style.display === "block"  ) {
                 donar.style.display = "none";
                 donation.style.display = "none";
+                requestInfo.style.display = "none";
                 donee.style.display = "block";
             } else {
                 donee.style.display = "none";
                 donation.style.display = "block";
             }
         }
+
+        function handleAction(requestId, action) {
+            console.log("Request ID:", requestId);
+            console.log("Action:", action);
+
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.success) {
+                                console.log(response.message);
+                                // Reload the relevant data (e.g., fetchRequests())
+                                fetchRequests();
+                            } else {
+                                console.error(response.message);
+                            }
+                        } catch (error) {
+                            console.error("Error parsing JSON response:", error);
+                        }
+                    } else {
+                        console.error("Error:", xhr.status);
+                    }
+                }
+            };
+            xhr.open("POST", "update_request.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(`request_id=${encodeURIComponent(requestId)}&action=${action}`);
+        }
+
+
+        function fetchRequests() {
+            var donar = document.getElementById("donar_info");
+            var donee = document.getElementById("donee_info");
+            var donation =document.getElementById("donation_info");
+            var requestInfo = document.getElementById("request_info");
+
+            if (requestInfo.style.display === "none" || donee.style.display === "block" || donar.style.display === "block" ) {
+                donar.style.display = "none";
+                donation.style.display = "none";
+                donee.style.display = "none";
+                requestInfo.style.display = "block";
+            } else {
+                requestInfo.style.display = "none";
+                donee.style.display = "none";
+                donation.style.display = "block";
+            }
+        }
+
+        // ApproveBtn()
+
+
     </script>
 </body>
 </html>
