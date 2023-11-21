@@ -1,0 +1,156 @@
+body {
+  font-family: Arial, sans-serif;
+  background-image: url("https://st2.depositphotos.com/1005893/6834/i/450/depositphotos_68349399-stock-photo-money-jar-with-donations-label.jpg");
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+header {
+  background-color: #3498db;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+
+header img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+}
+
+h1 {
+  margin: 10px 0;
+}
+
+main {
+  text-align: center;
+  margin: 20px;
+}
+
+.donor-profile {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.button-group {
+  width: 460px;
+}
+.profile-image {
+  width: 70%;
+}
+
+.profile-image img {
+  width: 80%;
+  height: 65%;
+  border: 4px solid #3498db;
+  align-self: center;
+}
+
+.profile-info {
+  margin-top: 20px;
+  text-align: left;
+}
+
+h2 {
+  color: #3498db;
+}
+
+/* .button-group { text-align: center; } */
+
+.button-group button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.button-group button:hover {
+  background-color: #2980b9;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Add these styles to your existing CSS file or create a new one */
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.container h1 {
+  color: #343a40;
+  text-size-adjust: 53px;
+}
+
+.container label {
+  display: block;
+  margin-top: 10px;
+}
+
+.container select,
+.container input[type="text"],
+.container input[type="submit"] {
+  width: 100%;
+  padding: 20px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.container select {
+  background-color: #fff;
+}
+
+.container input[type="submit"]:hover {
+  background-color: #0056b3;
+}
