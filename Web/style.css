@@ -1,0 +1,24 @@
+body {
+  padding: 50px;
+  /* background-color: #f0ffff; */
+  font-family: Arial, sans-serif;
+  background: url("https://previews.123rf.com/images/rawpixel/rawpixel1603/rawpixel160317416/53962605-fundraising-donation-heart-charity-welfare-concept.jpg");
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 50px;
+  box-shadow: rgba(3, 3, 244, 0.2) 0px 7px 29px 0px;
+  background-color: rgba(200, 208, 195, 0.434);
+}
+.form-group {
+  margin-bottom: 30px;
+}
