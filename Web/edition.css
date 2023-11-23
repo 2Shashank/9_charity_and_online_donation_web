@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+.overlay {
+  /* position: fixed; 
+  height: 100%;
+  width: 100%; */
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Box Styles */
+.modal-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  transform: scale(1.2);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+/* Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+input[type="submit"] {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+input[type="submit"]:hover {
+  background-color: #2980b9;
+}
+
+/* Active Styles */
+section.active .overlay {
+  display: flex;
+}
+
+section.active .modal-box {
+  opacity: 1;
+  transform: scale(1);
+}
