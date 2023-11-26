@@ -332,38 +332,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 donation.style.display = "block";
             }
         }
-
-        function handleAction(requestId, action) {
-            console.log("Request ID:", requestId);
-            console.log("Action:", action);
-
-            const xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        try {
-                            const response = JSON.parse(xhr.responseText);
-                            if (response.success) {
-                                console.log(response.message);
-                                // Reload the relevant data (e.g., fetchRequests())
-                                fetchRequests();
-                            } else {
-                                console.error(response.message);
-                            }
-                        } catch (error) {
-                            console.error("Error parsing JSON response:", error);
-                        }
-                    } else {
-                        console.error("Error:", xhr.status);
-                    }
-                }
-            };
-            xhr.open("POST", "update_request.php", true);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send(`request_id=${encodeURIComponent(requestId)}&action=${action}`);
-        }
-
-
         function fetchRequests() {
             var donar = document.getElementById("donar_info");
             var donee = document.getElementById("donee_info");
@@ -381,10 +349,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 donation.style.display = "block";
             }
         }
-
-        // ApproveBtn()
-
-
     </script>
 </body>
 </html>
