@@ -25,7 +25,7 @@
     <!-- Navigation bar -->
     <div class="topnav">
         <a class="active" href="#"><i class="fa fa-home"></i> Home</a>
-        <a href="contact.html"><i class="fa fa-envelope"></i> Contact</a>
+        <a href="contact.php"><i class="fa fa-envelope"></i> Contact</a>
         <a href="login.php"><i class="fa fa-user"></i> Log in</a>
         <a href="admin_login.php"><i class="fa fa-user"></i>Admin Login</a>
     </div>
