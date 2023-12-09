@@ -81,7 +81,7 @@ header('Location: index.php');
   </head>
   <body>
     <div class="container">
-      <form action="action_page.php" method="post">
+      <form action="contact.php" method="post">
         <label for="name">Name</label>
         <input type="text" id="name" name="name" placeholder="Your name.." />
 
